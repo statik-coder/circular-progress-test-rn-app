@@ -1,21 +1,47 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Animated } from 'react-native';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import styled from 'styled-components/native';
 
 export default function App() {
+  const progressRef = useRef(null);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      const animation = Animated.sequence([
+        progressRef.current.animate(100, 8000),
+      ]);
+
+      progressRef && animation.start();
+    }, 3000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Container>
+      <Text>It is project to test "react-native-circular-progress"</Text>
+      <AnimatedCircularProgress
+        ref={progressRef}
+        fill={0}
+        size={120}
+        width={20}
+      />
+    </Container>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const Container = styled.View`
+  flex: 1;
+  background-color: #ffffff;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Text = styled.Text`
+  margin-bottom: 30px;
+  font-size: 24px;
+  text-align: center;
+`;
